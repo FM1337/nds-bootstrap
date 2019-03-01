@@ -148,7 +148,7 @@ u32* findModuleParamsOffset(const tNDSHeader* ndsHeader) {
 u32* findCardReadEndOffsetType0(const tNDSHeader* ndsHeader, const module_params_t* moduleParams) {
 	//dbg_printf("findCardReadEndOffsetType0:\n");
 
-	const char* romTid = getRomTid(ndsHeader);
+	const char* romTid = a9_getRomTid(ndsHeader);
 
 	u32* cardReadEndOffset = NULL;
 	if (strncmp(romTid, "UOR", 3) != 0 && (moduleParams->sdk_version < 0x4000000 || moduleParams->sdk_version > 0x5000000)) {
@@ -175,7 +175,7 @@ u32* findCardReadEndOffsetType0(const tNDSHeader* ndsHeader, const module_params
 u32* findCardReadEndOffsetType1(const tNDSHeader* ndsHeader) {
 	//dbg_printf("findCardReadEndOffsetType1:\n");
 
-	const char* romTid = getRomTid(ndsHeader);
+	const char* romTid = a9_getRomTid(ndsHeader);
 
 	u32* cardReadEndOffset = NULL;
 	if (strncmp(romTid, "UOR", 3) == 0) { // Start at 0x3800 for "WarioWare: DIY"

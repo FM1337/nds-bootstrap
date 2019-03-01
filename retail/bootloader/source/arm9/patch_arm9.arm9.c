@@ -106,7 +106,7 @@ static void patchCardReadCached(cardengineArm9* ce9, const tNDSHeader* ndsHeader
 		return;
 	}
 
-	const char* romTid = getRomTid(ndsHeader);
+	const char* romTid = a9_getRomTid(ndsHeader);
 	if (strncmp(romTid, "AYW", 3) == 0 // Yoshi's Island DS
 	|| strncmp(romTid, "A2L", 3) == 0) // Anno 1701: Dawn of Discovery
 	{
@@ -183,7 +183,7 @@ static void patchCacheFlush(cardengineArm9* ce9, bool usesThumb, u32* cardPullOu
 }*/
 
 static void patchCardId(cardengineArm9* ce9, const tNDSHeader* ndsHeader, const module_params_t* moduleParams, bool usesThumb, u32* cardReadEndOffset) {
-    const char* romTid = getRomTid(ndsHeader);
+    const char* romTid = a9_getRomTid(ndsHeader);
     
 	if (!cardReadEndOffset) {
 		return;
@@ -235,7 +235,7 @@ static void patchCardReadDma(cardengineArm9* ce9, const tNDSHeader* ndsHeader, c
 }
 
 static void patchSleep(cardengineArm9* ce9, const tNDSHeader* ndsHeader, const module_params_t* moduleParams, bool usesThumb) {
-    const char* romTid = getRomTid(ndsHeader);
+    const char* romTid = a9_getRomTid(ndsHeader);
     
     if (
         strncmp(romTid, "YGX", 3) == 0  // GTA Chinatow Wars
@@ -506,7 +506,7 @@ void relocate_ce9(u32 default_location, u32 current_location, u32 size) {
 }
 
 static void randomPatch(const tNDSHeader* ndsHeader, const module_params_t* moduleParams) {
-	const char* romTid = getRomTid(ndsHeader);
+	const char* romTid = a9_getRomTid(ndsHeader);
 
 	// Random patch
 	if (moduleParams->sdk_version > 0x3000000

@@ -28,7 +28,7 @@
 extern bool logging;
 
 void patchBinary(const tNDSHeader* ndsHeader) {
-	const char* romTid = getRomTid(ndsHeader);
+	const char* romTid = a9_getRomTid(ndsHeader);
 
 	// The World Ends With You (USA/Europe)
 	if (strcmp(romTid, "AWLE") == 0 || strcmp(romTid, "AWLP") == 0) {
