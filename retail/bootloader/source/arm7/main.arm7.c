@@ -96,7 +96,8 @@ extern u32 soundFix;
 extern u32 boostVram;
 extern u32 logging;
 
-static u32 ce9Location = CARDENGINE_ARM9_LOCATION;
+extern u32 ce9Location;
+extern u32 ce7Location;
 
 static void initMBK(void) {
 	// Give all DSi WRAM to ARM7 at boot
@@ -578,6 +579,10 @@ int arm7_main(void) {
 	initMBK();
 
 	arm9_boostVram = boostVram;
+	arm9_saveFileCluster = saveFileCluster;
+	arm9_saveSize = saveSize;
+	arm9_patchMpuRegion = patchMpuRegion;
+	arm9_patchMpuSize = patchMpuSize;
 
 	// Wait for ARM9 to at least start
 	while (arm9_stateFlag < ARM9_START);
@@ -652,7 +657,8 @@ int arm7_main(void) {
 	nocashMessage("Loading the header...\n");
 
 	bool foundModuleParams;
-	module_params_t* moduleParams = loadModuleParams(&dsiHeaderTemp.ndshdr, &foundModuleParams);
+	extern module_params_t* moduleParams;
+	moduleParams = loadModuleParams(&dsiHeaderTemp.ndshdr, &foundModuleParams);
     dbg_printf("sdk_version: ");
     dbg_hexa(moduleParams->sdk_version);
     dbg_printf("\n"); 
@@ -660,7 +666,8 @@ int arm7_main(void) {
 	ensureBinaryDecompressed(&dsiHeaderTemp.ndshdr, moduleParams, foundModuleParams);
 
 	// If possible, set to load ROM into RAM
-	u32 ROMinRAM = isROMLoadableInRAM(&dsiHeaderTemp.ndshdr, moduleParams, consoleModel);
+	extern u32 ROMinRAM;
+	ROMinRAM = isROMLoadableInRAM(&dsiHeaderTemp.ndshdr, moduleParams, consoleModel);
 
 	vu32* arm9StartAddress = storeArm9StartAddress(&dsiHeaderTemp.ndshdr, moduleParams);
 	ndsHeader = loadHeader(&dsiHeaderTemp, moduleParams, dsiModeConfirmed);
@@ -678,6 +685,9 @@ int arm7_main(void) {
 	//
 
 	nocashMessage("Trying to patch the card...\n");
+
+	ce9Location = CARDENGINE_ARM9_LOCATION;
+	ce7Location = CARDENGINE_ARM7_LOCATION;
 
 	memcpy((u32*)CARDENGINE_ARM7_LOCATION, (u32*)cardengine_arm7_bin, cardengine_arm7_bin_size);
 	increaseLoadBarLength();
@@ -705,27 +715,18 @@ int arm7_main(void) {
 	}
 	increaseLoadBarLength();
 
+	arm9_stateFlag = ARM9_PATCH;
+	while (arm9_stateFlag != ARM9_READY);
+
 	//
 	// 5 dots
 	//
-	patchBinary(ndsHeader);
-	errorCode = patchCardNds(
-		(cardengineArm7*)CARDENGINE_ARM7_LOCATION,
-		(cardengineArm9*)ce9Location,
-		ndsHeader,
-		moduleParams,
-		patchMpuRegion,
-		patchMpuSize,
-		ROMinRAM,
-		saveFileCluster,
-		saveSize
-	);
-	if (errorCode == ERR_NONE) {
+	/*if (errorCode == ERR_NONE) {
 		nocashMessage("Card patch successful");
 	} else {
 		nocashMessage("Card patch failed");
 		errorOutput();
-	}
+	}*/
 	increaseLoadBarLength();
 
 	//

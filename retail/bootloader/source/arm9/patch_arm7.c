@@ -6,7 +6,6 @@
 #include "common.h"
 #include "locations.h"
 #include "cardengine_header_arm7.h"
-#include "debug_file.h"
 
 //#define memcpy __builtin_memcpy
 
@@ -62,7 +61,7 @@ static void patchSleep(const tNDSHeader* ndsHeader) {
 	// Sleep
 	u32* sleepPatchOffset = findSleepPatchOffset(ndsHeader);
 	if (!sleepPatchOffset) {
-		dbg_printf("Trying thumb...\n");
+		//dbg_printf("Trying thumb...\n");
 		sleepPatchOffset = (u32*)findSleepPatchOffsetThumb(ndsHeader);
 		usesThumb = true;
 	}
@@ -116,13 +115,13 @@ u32 patchCardNdsArm7(
 	u32 ROMinRAM,
 	u32 saveFileCluster
 ) {
-	if (REG_SCFG_ROM != 0x703) {
+	/*if (REG_SCFG_ROM != 0x703) {
 		fixForDsiBios(ce7, ndsHeader, moduleParams);
-	}
+	}*/
 
-	if (REG_SCFG_EXT == 0 || forceSleepPatch || REG_SCFG_MC == 0x11) {
+	//if (REG_SCFG_EXT == 0 || forceSleepPatch || REG_SCFG_MC == 0x11) {
 		patchSleep(ndsHeader);
-	}
+	//}
 
 	//patchRamClear(ndsHeader, moduleParams);
 
@@ -146,6 +145,6 @@ u32 patchCardNdsArm7(
 		}
 	}
 
-	dbg_printf("ERR_NONE\n\n");
+	//dbg_printf("ERR_NONE\n\n");
 	return ERR_NONE;
 }

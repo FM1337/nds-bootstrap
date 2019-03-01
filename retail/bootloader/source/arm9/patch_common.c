@@ -24,7 +24,6 @@
 #include "cardengine_header_arm9.h"
 #include "patch.h"
 #include "common.h"
-#include "debug_file.h"
 
 extern bool logging;
 
@@ -137,12 +136,12 @@ u32 patchCardNds(
 	u32 saveFileCluster,
 	u32 saveSize
 ) {
-	dbg_printf("patchCardNds\n\n");
+	//dbg_printf("patchCardNds\n\n");
 
-	bool sdk5 = isSdk5(moduleParams);
-	if (sdk5) {
-		dbg_printf("[SDK 5]\n\n");
-	}
+	//bool sdk5 = isSdk5(moduleParams);
+	//if (sdk5) {
+		//dbg_printf("[SDK 5]\n\n");
+	//}
 
 	u32 errorCodeArm9 = patchCardNdsArm9(ce9, ndsHeader, moduleParams, patchMpuRegion, patchMpuSize);
 	
@@ -150,10 +149,10 @@ u32 patchCardNds(
 	if (errorCodeArm9 == ERR_NONE || ndsHeader->fatSize == 0) {
 		patchCardNdsArm7(ce7, ndsHeader, moduleParams, ROMinRAM, saveFileCluster);
 
-		dbg_printf("ERR_NONE");
+		//dbg_printf("ERR_NONE");
 		return ERR_NONE;
 	}
 
-	dbg_printf("ERR_LOAD_OTHR");
+	//dbg_printf("ERR_LOAD_OTHR");
 	return ERR_LOAD_OTHR;
 }

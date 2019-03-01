@@ -49,6 +49,7 @@ enum {
 	ARM9_BOOT,
 	ARM9_START,
 	ARM9_MEMCLR,
+	ARM9_PATCH,
 	ARM9_READY,
 	ARM9_BOOTBIN,
 	ARM9_DISPERR
@@ -57,6 +58,10 @@ enum {
 extern tNDSHeader* ndsHeader;
 extern bool dsiModeConfirmed;
 extern volatile bool arm9_boostVram;
+extern u32 arm9_saveFileCluster;
+extern u32 arm9_saveSize;
+extern u32 arm9_patchMpuRegion;
+extern u32 arm9_patchMpuSize;
 extern volatile int arm9_stateFlag;
 extern volatile bool arm9_errorColor;
 extern volatile int arm9_screenMode;

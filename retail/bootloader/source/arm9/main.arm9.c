@@ -37,6 +37,8 @@
 #include <nds/ipc.h>
 #include <nds/system.h>
 
+#include "module_params.h"
+#include "patch.h"
 #include "locations.h"
 #include "common.h"
 #include "loading.h"
@@ -44,8 +46,16 @@
 extern void arm9_clearCache(void);
 
 tNDSHeader* ndsHeader = NULL;
+u32 ce9Location = 0;
+u32 ce7Location = 0;
+u32 ROMinRAM = 0;
+module_params_t* moduleParams;
 bool dsiModeConfirmed = false;
 volatile bool arm9_boostVram = false;
+u32 arm9_saveFileCluster = 0;
+u32 arm9_saveSize = 0;
+u32 arm9_patchMpuRegion = 0;
+u32 arm9_patchMpuSize = 0;
 volatile int arm9_stateFlag = ARM9_BOOT;
 volatile u32 arm9_BLANK_RAM = 0;
 volatile int arm9_screenMode = 0; // 0 = Regular, 1 = Pong, 2 = Tic-Tac-Toe
@@ -133,6 +143,21 @@ void drawRectangleGradientAddr (u16* addr, int x, int y, int sizeX, int sizeY, i
 		if (G>0) G--;
 		if (B>0) B--;
 	}
+}
+
+void arm9_patchFunctions(void) {
+	patchBinary(ndsHeader);
+	patchCardNds(
+		(cardengineArm7*)ce7Location,
+		(cardengineArm9*)ce9Location,
+		ndsHeader,
+		moduleParams,
+		arm9_patchMpuRegion,
+		arm9_patchMpuSize,
+		ROMinRAM,
+		arm9_saveFileCluster,
+		arm9_saveSize
+	);
 }
 
 /*-------------------------------------------------------------------------
@@ -300,6 +325,11 @@ void arm9_main(void) {
 					}
 					break;		
 			}
+		}
+
+		if (arm9_stateFlag == ARM9_PATCH) {
+			arm9_patchFunctions();
+			arm9_stateFlag = ARM9_READY;
 		}
 	}
 
