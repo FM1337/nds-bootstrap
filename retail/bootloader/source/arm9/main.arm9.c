@@ -328,7 +328,9 @@ void arm9_main(void) {
 		}
 
 		if (arm9_stateFlag == ARM9_PATCH) {
+            cacheFlush();
 			arm9_patchFunctions();
+            cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 	}
