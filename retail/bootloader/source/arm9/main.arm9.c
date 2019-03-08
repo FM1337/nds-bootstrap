@@ -312,19 +312,31 @@ void arm9_main(void) {
 			}
 		}
 		if (arm9_stateFlag == ARM9_FIND) {
+			cacheFlush();
+			arm9_foundOff = 0;
 			arm9_foundOff = a9_findOffset(arm9_findOff, arm9_findDataLen, arm9_find, arm9_findLen);
+			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDBACK) {
+			cacheFlush();
+			arm9_foundOff = 0;
 			arm9_foundOff = a9_findOffsetBackwards(arm9_findOff, arm9_findDataLen, arm9_find, arm9_findLen);
+			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDTHUMB) {
+			cacheFlush();
+			arm9_foundOffThumb = 0;
 			arm9_foundOffThumb = a9_findOffsetThumb(arm9_findOffThumb, arm9_findDataLen, arm9_findThumb, arm9_findLen);
+			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDBACKTHUMB) {
+			cacheFlush();
+			arm9_foundOffThumb = 0;
 			arm9_foundOffThumb = a9_findOffsetBackwardsThumb(arm9_findOffThumb, arm9_findDataLen, arm9_findThumb, arm9_findLen);
+			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 	}
