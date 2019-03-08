@@ -52,8 +52,8 @@ volatile int arm9_stateFlag = ARM9_BOOT;
 
 const u32* arm9_findOff = 0;
 const u16* arm9_findOffThumb = 0;
-const u32* arm9_find = 0;
-const u16* arm9_findThumb = 0;
+u32 arm9_codeSig[4] = {0xFFFFFFFF};
+u16 arm9_codeSigThumb[8] = {0xFFFF};
 u32 arm9_findLen = 0;
 u32 arm9_findDataLen = 0;
 u32* arm9_foundOff = 0;
@@ -313,29 +313,25 @@ void arm9_main(void) {
 		}
 		if (arm9_stateFlag == ARM9_FIND) {
 			cacheFlush();
-			arm9_foundOff = 0;
-			arm9_foundOff = a9_findOffset(arm9_findOff, arm9_findDataLen, arm9_find, arm9_findLen);
+			arm9_foundOff = a9_findOffset(arm9_findOff, arm9_findDataLen, arm9_codeSig, arm9_findLen);
 			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDBACK) {
 			cacheFlush();
-			arm9_foundOff = 0;
-			arm9_foundOff = a9_findOffsetBackwards(arm9_findOff, arm9_findDataLen, arm9_find, arm9_findLen);
+			arm9_foundOff = a9_findOffsetBackwards(arm9_findOff, arm9_findDataLen, arm9_codeSig, arm9_findLen);
 			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDTHUMB) {
 			cacheFlush();
-			arm9_foundOffThumb = 0;
-			arm9_foundOffThumb = a9_findOffsetThumb(arm9_findOffThumb, arm9_findDataLen, arm9_findThumb, arm9_findLen);
+			arm9_foundOffThumb = a9_findOffsetThumb(arm9_findOffThumb, arm9_findDataLen, arm9_codeSigThumb, arm9_findLen);
 			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDBACKTHUMB) {
 			cacheFlush();
-			arm9_foundOffThumb = 0;
-			arm9_foundOffThumb = a9_findOffsetBackwardsThumb(arm9_findOffThumb, arm9_findDataLen, arm9_findThumb, arm9_findLen);
+			arm9_foundOffThumb = a9_findOffsetBackwardsThumb(arm9_findOffThumb, arm9_findDataLen, arm9_codeSigThumb, arm9_findLen);
 			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}

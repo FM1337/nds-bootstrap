@@ -66,8 +66,8 @@ extern volatile int arm9_stateFlag;
 
 extern const u32* arm9_findOff;
 extern const u16* arm9_findOffThumb;
-extern const u32* arm9_find;
-extern const u16* arm9_findThumb;
+extern u32 arm9_codeSig[4];
+extern u16 arm9_codeSigThumb[8];
 extern u32 arm9_findLen;
 extern u32 arm9_findDataLen;
 extern u32* arm9_foundOff;
