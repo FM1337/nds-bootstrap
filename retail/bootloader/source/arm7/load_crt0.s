@@ -46,6 +46,7 @@
 	.global loadingBar
 	.global loadingBarYpos
 	.global romread_LED
+	.global boostCpu
 	.global boostVram
 	.global gameSoftReset
 	.global forceSleepPatch
@@ -106,6 +107,8 @@ loadingBar:
 loadingBarYpos:
 	.word	0x00000000
 romread_LED:
+	.word	0x00000000
+boostCpu:
 	.word	0x00000000
 boostVram:
 	.word	0x00000000

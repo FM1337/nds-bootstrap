@@ -9,11 +9,6 @@
 
 //#define TABLE_SIZE (UCHAR_MAX + 1) // 256
 
-extern inline u32* findOffset(const u32* start, u32 dataLen, const u32* find, u32 findLen);
-extern inline u32* findOffsetBackwards(const u32* start, u32 dataLen, const u32* find, u32 findLen);
-extern inline u16* findOffsetThumb(const u16* start, u32 dataLen, const u16* find, u32 findLen);
-extern inline u16* findOffsetBackwardsThumb(const u16* start, u32 dataLen, const u16* find, u32 findLen);
-
 /*
 *   Look for @find and return the position of it.
 *   Brute Force algorithm

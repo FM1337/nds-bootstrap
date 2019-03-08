@@ -37,6 +37,7 @@
 #include <nds/ipc.h>
 #include <nds/system.h>
 
+#include "find.h"
 #include "locations.h"
 #include "common.h"
 #include "loading.h"
@@ -45,8 +46,19 @@ extern void arm9_clearCache(void);
 
 tNDSHeader* ndsHeader = NULL;
 bool dsiModeConfirmed = false;
+volatile bool arm9_boostCpu = false;
 volatile bool arm9_boostVram = false;
 volatile int arm9_stateFlag = ARM9_BOOT;
+
+const u32* arm9_findOff = 0;
+const u16* arm9_findOffThumb = 0;
+const u32* arm9_find = 0;
+const u16* arm9_findThumb = 0;
+u32 arm9_findLen = 0;
+u32 arm9_findDataLen = 0;
+u32* arm9_foundOff = 0;
+u16* arm9_foundOffThumb = 0;
+
 volatile u32 arm9_BLANK_RAM = 0;
 volatile int arm9_screenMode = 0; // 0 = Regular, 1 = Pong, 2 = Tic-Tac-Toe
 volatile int screenBrightness = 25;
@@ -235,6 +247,8 @@ void arm9_main(void) {
 	//	: : "r" (0x02FFFE04)
 	//);
 
+	REG_SCFG_CLK = (BIT(0) | BIT(7));	// TWL clock speed
+
 	REG_SCFG_EXT = 0x8300C000;
 	//REG_SCFG_EXT |= BIT(16);	// Access to New DMA Controller
 	if (arm9_boostVram) {
@@ -297,9 +311,30 @@ void arm9_main(void) {
 					break;		
 			}
 		}
+		if (arm9_stateFlag == ARM9_FIND) {
+			arm9_foundOff = a9_findOffset(arm9_findOff, arm9_findDataLen, arm9_find, arm9_findLen);
+			arm9_stateFlag = ARM9_READY;
+		}
+		if (arm9_stateFlag == ARM9_FINDBACK) {
+			arm9_foundOff = a9_findOffsetBackwards(arm9_findOff, arm9_findDataLen, arm9_find, arm9_findLen);
+			arm9_stateFlag = ARM9_READY;
+		}
+		if (arm9_stateFlag == ARM9_FINDTHUMB) {
+			arm9_foundOffThumb = a9_findOffsetThumb(arm9_findOffThumb, arm9_findDataLen, arm9_findThumb, arm9_findLen);
+			arm9_stateFlag = ARM9_READY;
+		}
+		if (arm9_stateFlag == ARM9_FINDBACKTHUMB) {
+			arm9_foundOffThumb = a9_findOffsetBackwardsThumb(arm9_findOffThumb, arm9_findDataLen, arm9_findThumb, arm9_findLen);
+			arm9_stateFlag = ARM9_READY;
+		}
+	}
+
+	if (!arm9_boostCpu && !dsiModeConfirmed) {
+		REG_SCFG_CLK = 0x80;	// NTR clock speed
 	}
 
 	if (dsiModeConfirmed) {
+		REG_SCFG_CLK = 0x85;
 		REG_SCFG_EXT = 0x8307F100;
 	} else {
 		// lock SCFG

@@ -94,6 +94,7 @@ extern u32 romread_LED;
 extern u32 gameSoftReset;
 //extern u32 forceSleepPatch;
 extern u32 soundFix;
+extern u32 boostCpu;
 extern u32 boostVram;
 extern u32 logging;
 
@@ -590,6 +591,7 @@ int arm7_main(void) {
 
 	initMBK();
 
+	arm9_boostCpu = boostCpu;
 	arm9_boostVram = boostVram;
 
 	// Wait for ARM9 to at least start

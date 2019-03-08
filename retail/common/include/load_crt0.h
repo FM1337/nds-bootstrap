@@ -31,6 +31,7 @@ typedef struct loadCrt0 {
     u32 loadingBar;
     u32 loadingBarYpos;
     u32 romread_LED;
+    u32 boostCpu;
     u32 boostVram;
     u32 gameSoftReset;
     u32 forceSleepPatch;
