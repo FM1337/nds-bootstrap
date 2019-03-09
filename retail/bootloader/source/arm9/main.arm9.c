@@ -52,6 +52,7 @@ volatile int arm9_stateFlag = ARM9_BOOT;
 
 const u32* arm9_findOff = 0;
 const u16* arm9_findOffThumb = 0;
+u8 arm9_codeForItcm[0x200];
 u32 arm9_codeSig[4] = {0xFFFFFFFF};
 u16 arm9_codeSigThumb[8] = {0xFFFF};
 u32 arm9_findLen = 0;
@@ -145,6 +146,22 @@ void drawRectangleGradientAddr (u16* addr, int x, int y, int sizeX, int sizeY, i
 		if (G>0) G--;
 		if (B>0) B--;
 	}
+}
+
+extern u32* callmemsearch32(const u32* start, u32 dataSize, const u32* find, u32 findSize, bool forward);
+extern u16* callmemsearch16(const u32* start, u32 dataSize, const u32* find, u32 findSize, bool forward);
+
+u32* a9_findOffset(const u32* start, u32 dataSize, const u32* find, u32 findLen) {
+	return callmemsearch32(start, dataSize, find, findLen*sizeof(u32), true);
+}
+u32* a9_findOffsetBackwards(const u32* start, u32 dataSize, const u32* find, u32 findLen) {
+	return callmemsearch32(start, dataSize, find, findLen*sizeof(u32), false);
+}
+u16* a9_findOffsetThumb(const u16* start, u32 dataSize, const u16* find, u32 findLen) {
+	return callmemsearch16(start, dataSize, find, findLen*sizeof(u16), true);
+}
+u16* a9_findOffsetBackwardsThumb(const u16* start, u32 dataSize, const u16* find, u32 findLen) {
+	return callmemsearch16(start, dataSize, find, findLen*sizeof(u16), false);
 }
 
 /*-------------------------------------------------------------------------
@@ -255,6 +272,8 @@ void arm9_main(void) {
 		REG_SCFG_EXT |= BIT(13);	// Extended VRAM Access
 	}
 
+	a9_tonccpy(0x00000000, arm9_codeForItcm, 0x200);	// Copy code to ITCM
+
 	screenBrightness = 25;
 	fadeType = true;
 
@@ -312,27 +331,19 @@ void arm9_main(void) {
 			}
 		}
 		if (arm9_stateFlag == ARM9_FIND) {
-			cacheFlush();
 			arm9_foundOff = a9_findOffset(arm9_findOff, arm9_findDataLen, arm9_codeSig, arm9_findLen);
-			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDBACK) {
-			cacheFlush();
 			arm9_foundOff = a9_findOffsetBackwards(arm9_findOff, arm9_findDataLen, arm9_codeSig, arm9_findLen);
-			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDTHUMB) {
-			cacheFlush();
 			arm9_foundOffThumb = a9_findOffsetThumb(arm9_findOffThumb, arm9_findDataLen, arm9_codeSigThumb, arm9_findLen);
-			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 		if (arm9_stateFlag == ARM9_FINDBACKTHUMB) {
-			cacheFlush();
 			arm9_foundOffThumb = a9_findOffsetBackwardsThumb(arm9_findOffThumb, arm9_findDataLen, arm9_codeSigThumb, arm9_findLen);
-			cacheFlush();
 			arm9_stateFlag = ARM9_READY;
 		}
 	}

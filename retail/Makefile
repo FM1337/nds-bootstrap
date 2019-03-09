@@ -129,7 +129,7 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 export GAME_ICON := $(CURDIR)/$(ASSETS)/icon.bmp
 
 #.PHONY: cardengine_arm7 cardengine_arm9 bootloader BootStrap clean
-.PHONY: all dist release nightly bootloader cardengine_arm7 cardengine_arm9 cardengine_arm9_reloc cardengine_arm9_sdk5 clean
+.PHONY: all dist release nightly bootloader_itcm bootloader cardengine_arm7 cardengine_arm9 cardengine_arm9_reloc cardengine_arm9_sdk5 clean
 
 all:	$(OUTPUT)
 
@@ -151,7 +151,7 @@ nightly:	$(OUTPUT)
 $(OUTPUT):	$(BIN) arm7/$(TARGET).elf arm9/$(TARGET).elf
 	ndstool	-c $(OUTPUT) -7 arm7/$(TARGET).elf -9 arm9/$(TARGET).elf -d $(NITRODATA) \
 			-b $(GAME_ICON) "$(GAME_TITLE);$(GAME_SUBTITLE1);$(GAME_SUBTITLE2)" \
-			-g KBSE 01 "NDSBOOTSTRAP" -z 80040000 -u 00030004 -a 00000138 -p 00000001
+			-g KBSE 01 "NDSBOOTSTRAP" -z 80040000 -u 00030004
 
 #---------------------------------------------------------------------------------
 arm7/$(TARGET).elf:
@@ -162,8 +162,12 @@ arm9/$(TARGET).elf:	bootloader
 	@$(MAKE) -C arm9
 
 #---------------------------------------------------------------------------------		
-bootloader: $(DATA) cardengine_arm7 cardengine_arm9 cardengine_arm9_reloc cardengine_arm9_sdk5
+bootloader: $(DATA) bootloader_itcm cardengine_arm7 cardengine_arm9 cardengine_arm9_reloc cardengine_arm9_sdk5
 	@$(MAKE) -C bootloader
+
+#---------------------------------------------------------------------------------		
+bootloader_itcm: $(DATA)
+	@$(MAKE) -C bootloader_itcm
 
 #---------------------------------------------------------------------------------		
 cardengine_arm7: $(DATA)
@@ -196,6 +200,7 @@ clean:
 	@$(MAKE) -C cardengine/arm9 clean
 	@$(MAKE) -C cardengine/arm9_reloc clean
 	@$(MAKE) -C cardengine/arm9_sdk5 clean
+	@$(MAKE) -C bootloader_itcm clean
 	@$(MAKE) -C bootloader clean
 		
 $(DATA):

@@ -115,4 +115,37 @@ DC_WaitWriteBufferEmpty:
 	bx      lr
 	.pool
 
+.global callmemsearch32
+.type	callmemsearch32 STT_FUNC
+callmemsearch32:
+    stmfd   sp!, {r5-r11,lr}
+
+	ldr		r6, memsearch32location
+
+	bl		_blx_r6_stub_memsearch32	
+
+	ldmfd   sp!, {r5-r11,pc}
+	bx      lr
+_blx_r6_stub_memsearch32:
+	bx	r6	
+.pool
+memsearch32location:
+.word   0x8
+
+.global callmemsearch16
+.type	callmemsearch16 STT_FUNC
+callmemsearch16:
+    stmfd   sp!, {r5-r11,lr}
+
+	ldr		r6, memsearch16location
+
+	bl		_blx_r6_stub_memsearch16	
+
+	ldmfd   sp!, {r5-r11,pc}
+	bx      lr
+_blx_r6_stub_memsearch16:
+	bx	r6	
+.pool
+memsearch16location:
+.word   0x88
 

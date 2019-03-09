@@ -2,7 +2,6 @@
 #include <stddef.h> // NULL
 #include <nds/ndstypes.h>
 //#include <limits.h>
-#include "find.h"
 
 // (memcmp is slower)
 //#define memcmp __builtin_memcmp

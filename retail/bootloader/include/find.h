@@ -18,19 +18,6 @@ u32* findOffsetBackwards(const u32* start, u32 dataLen, const u32* find, u32 fin
 u16* findOffsetThumb(const u16* start, u32 dataLen, const u16* find, u32 findLen);
 u16* findOffsetBackwardsThumb(const u16* start, u32 dataLen, const u16* find, u32 findLen);
 
-inline u32* a9_findOffset(const u32* start, u32 dataSize, const u32* find, u32 findLen) {
-	return memsearch32(start, dataSize, find, findLen*sizeof(u32), true);
-}
-inline u32* a9_findOffsetBackwards(const u32* start, u32 dataSize, const u32* find, u32 findLen) {
-	return memsearch32(start, dataSize, find, findLen*sizeof(u32), false);
-}
-inline u16* a9_findOffsetThumb(const u16* start, u32 dataSize, const u16* find, u32 findLen) {
-	return memsearch16(start, dataSize, find, findLen*sizeof(u16), true);
-}
-inline u16* a9_findOffsetBackwardsThumb(const u16* start, u32 dataSize, const u16* find, u32 findLen) {
-	return memsearch16(start, dataSize, find, findLen*sizeof(u16), false);
-}
-
 // ARM9
 u32* findModuleParamsOffset(const tNDSHeader* ndsHeader);
 u32* findCardReadEndOffsetType0(const tNDSHeader* ndsHeader, const module_params_t* moduleParams);
