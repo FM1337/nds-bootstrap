@@ -62,7 +62,6 @@
 #include "locations.h"
 #include "loading_screen.h"
 
-#include "bootloader_itcm_bin.h"
 #include "cardengine_arm7_bin.h"
 #include "cardengine_arm9_bin.h"
 #include "cardengine_arm9_reloc_bin.h"
@@ -592,8 +591,9 @@ int arm7_main(void) {
 
 	initMBK();
 
-	extern u8 arm9_codeForItcm[0x200];
-	memcpy(arm9_codeForItcm, (u32*)bootloader_itcm_bin, bootloader_itcm_bin_size);
+    // TODO : move that to arm9
+	//extern u8 arm9_codeForItcm[0x200];
+	//memcpy(arm9_codeForItcm, (u32*)bootloader_itcm_bin, bootloader_itcm_bin_size);
 
 	// Wait for ARM9 to at least start
 	while (arm9_stateFlag < ARM9_START);

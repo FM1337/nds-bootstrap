@@ -51,7 +51,7 @@ ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
  
 export TOPDIR	:=	$(CURDIR)
-export LOADBIN	:=	$(CURDIR)/../data/$(TARGET).bin
+export LOADBIN	:=	$(CURDIR)/../../data/$(TARGET).bin
 export LOADELF	:=	$(CURDIR)/$(TARGET).elf
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
@@ -61,7 +61,7 @@ CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 #BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
-BINFILES	:=	bootloader_itcm.bin cardengine_arm7.bin cardengine_arm9.bin cardengine_arm9_reloc.bin cardengine_arm9_sdk5.bin
+BINFILES	:=	bootloader_arm9.bin cardengine_arm7.bin cardengine_arm9.bin cardengine_arm9_reloc.bin cardengine_arm9_sdk5.bin
  
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
  
@@ -114,19 +114,19 @@ bootloader_arm9.bin.o : $(CURDIR)/../../../data/bootloader_arm9.bin
 	@echo $(notdir $<)
 	$(bin2o)
 
-cardengine_arm7.bin.o : $(CURDIR)/../../data/cardengine_arm7.bin
+cardengine_arm7.bin.o : $(CURDIR)/../../../data/cardengine_arm7.bin
 	@echo $(notdir $<)
 	$(bin2o)
 
-cardengine_arm9.bin.o : $(CURDIR)/../../data/cardengine_arm9.bin
+cardengine_arm9.bin.o : $(CURDIR)/../../../data/cardengine_arm9.bin
 	@echo $(notdir $<)
 	$(bin2o)
 
-cardengine_arm9_reloc.bin.o : $(CURDIR)/../../data/cardengine_arm9_reloc.bin
+cardengine_arm9_reloc.bin.o : $(CURDIR)/../../../data/cardengine_arm9_reloc.bin
 	@echo $(notdir $<)
 	$(bin2o)
 
-cardengine_arm9_sdk5.bin.o : $(CURDIR)/../../data/cardengine_arm9_sdk5.bin
+cardengine_arm9_sdk5.bin.o : $(CURDIR)/../../../data/cardengine_arm9_sdk5.bin
 	@echo $(notdir $<)
 	$(bin2o)
 
