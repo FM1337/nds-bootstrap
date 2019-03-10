@@ -264,9 +264,6 @@ void arm9_main(void) {
 	//	: : "r" (0x02FFFE04)
 	//);
 
-	arm9_boostCpu = boostCpu;
-	arm9_boostVram = boostVram;
-
 	a9_tonccpy(0x00000000, arm9_codeForItcm, 0x200);	// Copy code to ITCM
 
 	screenBrightness = 25;
