@@ -592,9 +592,6 @@ int arm7_main(void) {
 
 	initMBK();
 
-	arm9_boostCpu = boostCpu;
-	arm9_boostVram = boostVram;
-
 	extern u8 arm9_codeForItcm[0x200];
 	memcpy(arm9_codeForItcm, (u32*)bootloader_itcm_bin, bootloader_itcm_bin_size);
 
@@ -808,6 +805,9 @@ int arm7_main(void) {
 	//
 	// Final 8 dots
 	//
+
+	arm9_boostCpu = boostCpu;
+	arm9_boostVram = boostVram;
 
 	if (!dsiModeConfirmed) {
 		REG_SCFG_EXT &= ~(1UL << 31); // Lock SCFG

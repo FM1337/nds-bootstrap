@@ -46,8 +46,8 @@ extern void arm9_clearCache(void);
 
 tNDSHeader* ndsHeader = NULL;
 bool dsiModeConfirmed = false;
-volatile bool arm9_boostCpu = false;
-volatile bool arm9_boostVram = false;
+bool arm9_boostCpu = false;
+bool arm9_boostVram = false;
 volatile int arm9_stateFlag = ARM9_BOOT;
 
 const u32* arm9_findOff = 0;
@@ -264,13 +264,8 @@ void arm9_main(void) {
 	//	: : "r" (0x02FFFE04)
 	//);
 
-	REG_SCFG_CLK = (BIT(0) | BIT(7));	// TWL clock speed
-
-	REG_SCFG_EXT = 0x8300C000;
-	//REG_SCFG_EXT |= BIT(16);	// Access to New DMA Controller
-	if (arm9_boostVram) {
-		REG_SCFG_EXT |= BIT(13);	// Extended VRAM Access
-	}
+	arm9_boostCpu = boostCpu;
+	arm9_boostVram = boostVram;
 
 	a9_tonccpy(0x00000000, arm9_codeForItcm, 0x200);	// Copy code to ITCM
 
@@ -348,14 +343,18 @@ void arm9_main(void) {
 		}
 	}
 
-	if (!arm9_boostCpu && !dsiModeConfirmed) {
-		REG_SCFG_CLK = 0x80;	// NTR clock speed
-	}
-
 	if (dsiModeConfirmed) {
 		REG_SCFG_CLK = 0x85;
 		REG_SCFG_EXT = 0x8307F100;
 	} else {
+		REG_SCFG_EXT = 0x8300C000;
+		//REG_SCFG_EXT |= BIT(16);	// Access to New DMA Controller
+		if (arm9_boostVram) {
+			REG_SCFG_EXT |= BIT(13);	// Extended VRAM Access
+		}
+		if (!arm9_boostCpu) {
+			REG_SCFG_CLK = 0x80;	// NTR clock speed
+		}
 		// lock SCFG
 		REG_SCFG_EXT &= ~(1UL << 31);
 	}

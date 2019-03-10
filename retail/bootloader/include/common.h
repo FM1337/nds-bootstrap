@@ -60,8 +60,8 @@ enum {
 
 extern tNDSHeader* ndsHeader;
 extern bool dsiModeConfirmed;
-extern volatile bool arm9_boostCpu;
-extern volatile bool arm9_boostVram;
+extern bool arm9_boostCpu;
+extern bool arm9_boostVram;
 extern volatile int arm9_stateFlag;
 
 extern const u32* arm9_findOff;
