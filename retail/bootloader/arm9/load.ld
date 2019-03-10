@@ -1,11 +1,13 @@
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
 OUTPUT_ARCH(arm)
-ENTRY(_start)
+ENTRY(_arm9_start)
 
 MEMORY {
 
 	vram	: ORIGIN = 0x06000000, LENGTH = 256K
 	arm9ram	: ORIGIN = 0x023F4000, LENGTH = 16K		/* Used for the ARM9's functions */
+    dtcm	: ORIGIN = 0x0b000000, LENGTH = 16K
+    itcm	: ORIGIN = 0x01000100, LENGTH = 32K - 256
 }
 
 __vram_start	=	ORIGIN(vram);
@@ -25,6 +27,10 @@ __arm9_sp_irq	=	__arm9ram_top - 0x60;
 __arm9_sp_svc	=	__arm9_sp_irq - 0x100;
 __arm9_sp_usr	=	__arm9_sp_svc - 0x100;
 
+
+__dtcm_start	=	ORIGIN(dtcm);
+
+__itcm_start	=	ORIGIN(itcm);
 
 SECTIONS
 {
@@ -165,9 +171,7 @@ SECTIONS
 		. = ALIGN(4);
 		__data_end = ABSOLUTE(.) ;
 	} >vram = 0xff
-
-
-
+    
 	.bss ALIGN(4) :
 	{
 		__bss_start = ABSOLUTE(.);

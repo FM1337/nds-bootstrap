@@ -41,7 +41,7 @@ LDFLAGS	=	-nostartfiles -T $(CURDIR)/../load.ld -g $(ARCH) -Wl,-Map,$(notdir $*.
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project (order is important)
 #---------------------------------------------------------------------------------
-LIBS	:=	
+LIBS	:= -lnds9	
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -58,7 +58,7 @@ ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
 export TARGET	:=	bootloader_arm9
-export OUTPUT	:=	$(CURDIR)/../data/$(TARGET)
+export OUTPUT	:=	$(CURDIR)/../../data/$(TARGET)
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
