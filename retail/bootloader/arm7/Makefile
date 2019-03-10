@@ -14,9 +14,9 @@ endif
 #---------------------------------------------------------------------------------
 TARGET		:=	load
 BUILD		:=	build
-SOURCES		:=	source source/arm7 source/arm7/save_patches source/arm9 source/arm9/loading_screens ../common/source ../common/source_general
-INCLUDES	:=	include build ../common/include
-DATA		:=	../data
+SOURCES		:=	source source/save_patches ../../common/source ../../common/source_general
+INCLUDES	:=	../include build ../../common/include
+DATA		:=	../../data
 SPECS		:=  specs
  
 #---------------------------------------------------------------------------------
@@ -109,8 +109,8 @@ $(LOADELF)	:	$(OFILES)
 #dldiengine.bin.o : $(CURDIR)/../../data/dldiengine.bin
 #	@echo $(notdir $<)
 #	$(bin2o)
-	
-bootloader_itcm.bin.o : $(CURDIR)/../../data/bootloader_itcm.bin
+
+bootloader_arm9.bin.o : $(CURDIR)/../../../data/bootloader_arm9.bin
 	@echo $(notdir $<)
 	$(bin2o)
 

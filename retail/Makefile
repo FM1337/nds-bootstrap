@@ -128,8 +128,8 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 #endif
 export GAME_ICON := $(CURDIR)/$(ASSETS)/icon.bmp
 
-#.PHONY: cardengine_arm7 cardengine_arm9 bootloader BootStrap clean
-.PHONY: all dist release nightly bootloader_itcm bootloader cardengine_arm7 cardengine_arm9 cardengine_arm9_reloc cardengine_arm9_sdk5 clean
+#.PHONY: cardengine_arm7 cardengine_arm9 bootloader_arm7 bootloader_arm9 bootloader_arm9_itcm BootStrap clean
+.PHONY: all dist release nightly bootloader_arm9_itcm bootloader_arm9 bootloader_arm7  cardengine_arm7 cardengine_arm9 cardengine_arm9_reloc cardengine_arm9_sdk5 clean
 
 all:	$(OUTPUT)
 
@@ -162,12 +162,16 @@ arm9/$(TARGET).elf:	bootloader
 	@$(MAKE) -C arm9
 
 #---------------------------------------------------------------------------------		
-bootloader: $(DATA) bootloader_itcm cardengine_arm7 cardengine_arm9 cardengine_arm9_reloc cardengine_arm9_sdk5
-	@$(MAKE) -C bootloader
+bootloader: $(DATA) bootloader_arm9 cardengine_arm7 cardengine_arm9 cardengine_arm9_reloc cardengine_arm9_sdk5
+	@$(MAKE) -C bootloader/arm7
 
 #---------------------------------------------------------------------------------		
-bootloader_itcm: $(DATA)
-	@$(MAKE) -C bootloader_itcm
+bootloader_arm9: $(DATA) bootloader_arm9_itcm
+	@$(MAKE) -C bootloader/arm9
+
+#---------------------------------------------------------------------------------		
+bootloader_arm9_itcm: $(DATA)
+	@$(MAKE) -C bootloader/arm9_itcm
 
 #---------------------------------------------------------------------------------		
 cardengine_arm7: $(DATA)
@@ -200,8 +204,9 @@ clean:
 	@$(MAKE) -C cardengine/arm9 clean
 	@$(MAKE) -C cardengine/arm9_reloc clean
 	@$(MAKE) -C cardengine/arm9_sdk5 clean
-	@$(MAKE) -C bootloader_itcm clean
-	@$(MAKE) -C bootloader clean
+	@$(MAKE) -C bootloader/arm9_itcm clean
+	@$(MAKE) -C bootloader/arm9 clean
+	@$(MAKE) -C bootloader/arm7 clean
 		
 $(DATA):
 	@mkdir -p $(DATA)

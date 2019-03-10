@@ -15,9 +15,9 @@ include $(DEVKITARM)/ds_rules
 # all directories are relative to this makefile
 #---------------------------------------------------------------------------------
 BUILD		:=	build
-SOURCES		:=	source
-INCLUDES	:=	../bootloader/include
-DATA		:=	data
+SOURCES		:=	source source/loading_screens ../../common/source ../../common/source_general
+INCLUDES	:=	../include build ../../common/include 
+DATA		:=	../../data
 
 
 #---------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ LIBDIRS	:=	$(LIBNDS)
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export TARGET	:=	bootloader_itcm
+export TARGET	:=	bootloader_arm9
 export OUTPUT	:=	$(CURDIR)/../data/$(TARGET)
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
@@ -116,6 +116,10 @@ $(DEPSDIR)/$(TARGET).elf:	$(OFILES)
 #	@echo linking $(notdir $@)
 #	@$(LD)  $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
 
+
+bootloader_arm9_itcm.bin.o : $(CURDIR)/../../../data/bootloader_arm9_itcm.bin
+	@echo $(notdir $<)
+	$(bin2o)
 
 #---------------------------------------------------------------------------------
 %.bin	:	%.elf
