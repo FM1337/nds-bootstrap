@@ -315,7 +315,8 @@ static void patchCardEndReadDma(cardengineArm9* ce9, const tNDSHeader* ndsHeader
     const char* romTid = getRomTid(ndsHeader);
     
     if (
-        strncmp(romTid, "YGX", 3) == 0  // GTA Chinatown Wars // works
+        moduleParams->sdk_version > 0x4000000
+        ||strncmp(romTid, "YGX", 3) == 0  // GTA Chinatown Wars // works
         ||  strncmp(romTid, "YR9", 3) == 0  // Castlevania OE // sound cracking to be investigated
         //||  strncmp(romTid, "ACV", 3) == 0  // Castlevania DOS // black screen issue to be investigated
         //||  strncmp(romTid, "AMH", 3) == 0  // Metroid Prime Hunters // TODO : freeze issue to be investigated
